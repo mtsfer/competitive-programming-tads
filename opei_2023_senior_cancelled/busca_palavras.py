@@ -3,10 +3,11 @@ EMPTY_PLACE_SYMBOL = '-'
 CURRENT_POSITION_SYMBOL = "#"
 
 
-def print_matrix(matrix):
+def print_matrix(matrix, current_x, current_y):
     for i in range(MATRIX_SIZE):
         for j in range(MATRIX_SIZE):
-            print(matrix[i][j], end=' ')
+            print(CURRENT_POSITION_SYMBOL if [i, j] == [current_x, current_y] else matrix[i][j],
+                  end=' ' if j < MATRIX_SIZE - 1 else '')
         print()
 
 
@@ -35,7 +36,6 @@ def main():
     matrix = [[EMPTY_PLACE_SYMBOL for _ in range(MATRIX_SIZE)] for _ in range(MATRIX_SIZE)]
 
     current_x, current_y = map(int, input().split())
-    matrix[current_x][current_y] = CURRENT_POSITION_SYMBOL
 
     word_size = int(input())
     letters_info = []
@@ -47,7 +47,7 @@ def main():
         letters_info.append([letter, letter_x, letter_y])
 
     print(f'Inicialmente nossa matriz e:')
-    print_matrix(matrix)
+    print_matrix(matrix, current_x, current_y)
 
     word_collected = ''
     next_letter_index_to_search = 0
@@ -57,16 +57,15 @@ def main():
         letter_x = current_letter_info[1]
         letter_y = current_letter_info[2]
 
-        matrix[current_x][current_y] = EMPTY_PLACE_SYMBOL
         current_x, current_y = get_next_coordinate(current_x, current_y, letter_x, letter_y)
-        matrix[current_x][current_y] = CURRENT_POSITION_SYMBOL
 
         if [current_x, current_y] == [letter_x, letter_y]:
             word_collected += current_letter_info[0]
+            matrix[current_x][current_y] = EMPTY_PLACE_SYMBOL
             next_letter_index_to_search += 1
 
         print(f'Por enquanto temos a palavra: {word_collected}')
-        print_matrix(matrix)
+        print_matrix(matrix, current_x, current_y)
 
     print(f'Acabamos nossa jornada e temos a palavra: {word_collected}')
 
